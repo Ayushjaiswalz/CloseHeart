@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Couple - CloseHeart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold text-pink-600 mb-6 text-center">Create Couple 💑</h2>
+
+        {% if message %}
+        <div class="mb-4 p-2 text-center text-sm text-white {% if success %}bg-green-500{% else %}bg-red-500{% endif %} rounded">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/create-couple">
+            <label class="block mb-2 font-medium">User 1 ID</label>
+            <input type="text" name="user1_id" class="w-full p-2 border rounded mb-4" required>
+
+            <label class="block mb-2 font-medium">User 2 ID</label>
+            <input type="text" name="user2_id" class="w-full p-2 border rounded mb-6" required>
+
+            <button type="submit" class="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">Create Couple</button>
+        </form>
+
+        <p class="mt-4 text-center text-sm">
+            Need to <a href="/register" class="text-pink-600 font-semibold">add users first?</a>
+        </p>
+    </div>
+</body>
+</html>

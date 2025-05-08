@@ -1,0 +1,48 @@
+# Bytecode and Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Environment files
+.env
+*.env
+
+# Virtual environment folders
+venv/
+env/
+dis/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Flask specific
+instance/
+*.sqlite3
+
+# Alembic
+alembic/versions/
+alembic.ini
+
+# Coverage/test output
+.coverage
+htmlcov/
+.cache/
+pytest_cache/
+nosetests.xml
+coverage.xml
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
