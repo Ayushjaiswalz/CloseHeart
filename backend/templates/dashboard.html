@@ -43,7 +43,7 @@
     <section class="bg-blue-100 p-4 rounded-xl border border-blue-300 text-center shadow">
         <h3 class="text-base font-semibold text-blue-800">🌍 Distance Between You</h3>
         <p id="distance-value" class="text-blue-700 mt-1 text-sm">
-                  {% if distance_km is not none and distance_km <= 0.3 %}
+                  {% if distance_km is not none and distance_km <= 0.25 %}
                     You are together 💞
                   {% elif distance_km is not none %}
                     {{ distance_km }} km apart
@@ -105,7 +105,7 @@
         .then(data => {
           let text = "Calculating...";
           if (data.distance !== undefined) {
-            if (data.distance <= 0.5) {
+            if (data.distance <= 0.25) {
               text = "You are together 💞";
             } else {
               text = `${data.distance} km apart`;
