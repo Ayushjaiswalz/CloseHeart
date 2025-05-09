@@ -59,12 +59,18 @@
     </section>
     {% endif %}
 
-    <!-- Retry Button -->
+    <!-- Retry + Refresh Buttons -->
     <div class="text-center">
-      <button onclick="updateLocation()" class="bg-pink-600 text-white px-6 py-2 rounded-full shadow hover:bg-pink-700 transition">
+        <button onclick="updateLocation()" class="bg-pink-600 text-white px-6 py-2 rounded-full shadow hover:bg-pink-700 transition">
         📍 Retry Location Update
-      </button>
+        </button>
+        <div class="mt-2">
+        <button onclick="location.reload()" class="text-sm text-gray-600 hover:text-pink-600 transition">
+            🔄 Refresh
+        </button>
+        </div>
     </div>
+  
   </main>
 
   <!-- JS: Geolocation + Map -->
