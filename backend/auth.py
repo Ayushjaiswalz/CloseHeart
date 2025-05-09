@@ -28,7 +28,7 @@ def register():
 
     # Hash the password
     # password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    password_hash = password  # store as plain text
+    password_hash = password 
 
     # Create user
     new_user = User(name=name, email=email, password_hash=password_hash)
