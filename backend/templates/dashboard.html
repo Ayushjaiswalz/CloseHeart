@@ -41,11 +41,17 @@
 
     <!-- Distance -->
     <section class="bg-blue-100 p-4 rounded-xl border border-blue-300 text-center shadow">
-      <h3 class="text-base font-semibold text-blue-800">🌍 Distance Between You</h3>
-      <p id="distance-value" class="text-blue-700 mt-1 text-sm">
-        {{ distance_km if distance_km is not none else 'Calculating...' }} km apart
-      </p>
-    </section>
+        <h3 class="text-base font-semibold text-blue-800">🌍 Distance Between You</h3>
+        <p id="distance-value" class="text-blue-700 mt-1 text-sm">
+                  {% if distance_km is not none and distance_km <= 0.3 %}
+                    You are together 💞
+                  {% elif distance_km is not none %}
+                    {{ distance_km }} km apart
+                  {% else %}
+                    Calculating...
+                  {% endif %}
+                </p>
+              </section>            
 
     <!-- Last Met -->
     {% if days_since_met is not none %}
@@ -97,12 +103,19 @@
       fetch('/api/live-distance')
         .then(res => res.json())
         .then(data => {
-          document.getElementById('distance-value').textContent = data.distance !== undefined
-            ? `${data.distance} km apart`
-            : "Location not available";
-        }).catch(err => {
+          let text = "Calculating...";
+          if (data.distance !== undefined) {
+            if (data.distance <= 0.5) {
+              text = "You are together 💞";
+            } else {
+              text = `${data.distance} km apart`;
+            }
+          }
+          document.getElementById('distance-value').textContent = text;
+        })
+        .catch(err => {
+          console.error("Failed to fetch live distance:", err);
           document.getElementById('distance-value').textContent = "Error";
-          console.error(err);
         });
     }
 
