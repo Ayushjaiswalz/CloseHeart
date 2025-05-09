@@ -1,90 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloseHeart Dashboard 💖</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <meta name="theme-color" content="#f472b6" />
 </head>
-<body class="bg-pink-50 min-h-screen flex justify-center items-center">
+<body class="bg-pink-50 text-gray-800 min-h-[100dvh] flex flex-col">
 
-    <div class="bg-white p-12 rounded-2xl shadow-xl w-full max-w-xl">
-    <h2 class="text-2xl font-bold text-center text-pink-600">Welcome to Your Dashboard 💖</h2>
-    <div class="p-4 bg-gray-100 border border-gray-300 rounded shadow">
-        <h3 class="text-lg font-semibold text-gray-800">Your Map 🗺️</h3>
-        <div id="map" class="w-full h-64 mt-2 rounded"></div>
+  <!-- Header -->
+  <header class="p-4 bg-white shadow-md text-center">
+    <h1 class="text-xl font-bold text-pink-600">💖 CloseHeart Dashboard</h1>
+  </header>
+
+  <!-- Scrollable Content -->
+  <main class="flex-1 overflow-y-auto p-4 space-y-4">
+
+    <!-- Map -->
+    <section class="bg-white rounded-xl shadow border border-gray-200">
+      <div class="p-4 pb-0">
+        <h2 class="text-base font-semibold text-gray-800">🗺️ Your Map</h2>
       </div>
-      
+      <div id="map" class="w-full h-64 sm:h-72 md:h-80 rounded-b-xl"></div>
+    </section>
+
+    <!-- Partner Info -->
     {% if partner %}
-      <div class="text-center">
-        <p class="text-lg text-gray-700">You are connected with 
-          <span class="font-semibold text-pink-500">{{ partner.name }}</span>
-        </p>
-        <p class="text-sm text-gray-500 mt-1">Email: {{ partner.email }}</p>
-      </div>
+    <section class="bg-white p-4 rounded-xl shadow border border-gray-200 text-center">
+      <p class="text-lg">You are connected with 
+        <span class="text-pink-600 font-semibold">{{ partner.name }}</span>
+      </p>
+      <p class="text-sm text-gray-500 mt-1">{{ partner.email }}</p>
+    </section>
     {% else %}
-      <p class="text-center text-red-500">Unable to find your partner.</p>
+    <p class="text-center text-red-500">Unable to find your partner.</p>
     {% endif %}
 
-    <!-- Live Distance Block -->
-    <div id="distance-block" class="p-4 bg-blue-100 border border-blue-300 rounded shadow">
-      <h3 class="text-lg font-semibold text-blue-800">Distance Between You 🌍</h3>
-      <p class="text-blue-700 mt-1" id="distance-value">
+    <!-- Distance -->
+    <section class="bg-blue-100 p-4 rounded-xl border border-blue-300 text-center shadow">
+      <h3 class="text-base font-semibold text-blue-800">🌍 Distance Between You</h3>
+      <p id="distance-value" class="text-blue-700 mt-1 text-sm">
         {{ distance_km if distance_km is not none else 'Calculating...' }} km apart
       </p>
-    </div>
+    </section>
 
-    <!-- Days Since Last Met -->
+    <!-- Last Met -->
     {% if days_since_met is not none %}
-      <div class="p-4 bg-green-100 border border-green-300 rounded shadow">
-        <h3 class="text-lg font-semibold text-green-800">📅 Days Since You Met</h3>
-        <p class="text-green-700 mt-1">{{ days_since_met }} day{{ 's' if days_since_met != 1 else '' }} ago</p>
-      </div>
+    <section class="bg-green-100 p-4 rounded-xl border border-green-300 text-center shadow">
+      <h3 class="text-base font-semibold text-green-800">📅 Days Since You Met</h3>
+      <p class="text-green-700 mt-1 text-sm">{{ days_since_met }} day{{ 's' if days_since_met != 1 else '' }} ago</p>
+    </section>
     {% else %}
-      <div class="p-4 bg-yellow-100 border border-yellow-300 rounded shadow text-yellow-700">
-        Last met date not recorded.
-      </div>
+    <section class="bg-yellow-100 p-4 rounded-xl border border-yellow-300 text-yellow-700 text-center shadow">
+      Last met date not recorded.
+    </section>
     {% endif %}
 
-    <!-- Manual Retry Location Button -->
+    <!-- Retry Button -->
     <div class="text-center">
-      <button onclick="updateLocation()" class="bg-pink-500 text-white px-4 py-2 rounded mt-4">
+      <button onclick="updateLocation()" class="bg-pink-600 text-white px-6 py-2 rounded-full shadow hover:bg-pink-700 transition">
         📍 Retry Location Update
       </button>
     </div>
-  </div>
+  </main>
 
-  <!-- Scripts -->
+  <!-- JS: Geolocation + Map -->
   <script>
     function updateLocation() {
-      if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser.");
-        return;
-      }
-
+      if (!navigator.geolocation) return alert("Geolocation not supported.");
       navigator.geolocation.getCurrentPosition(success => {
-        const lat = success.coords.latitude;
-        const lon = success.coords.longitude;
-        console.log("Device Location:", lat, lon);
-
         fetch('/api/update-location', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ latitude: lat, longitude: lon })
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log("Server Response:", data);
-        })
-        .catch(err => {
-          console.error("Location update failed:", err);
-        });
-      }, error => {
-        alert("Unable to fetch your location.");
-        console.error("Geo error:", error);
+          body: JSON.stringify({
+            latitude: success.coords.latitude,
+            longitude: success.coords.longitude
+          })
+        }).then(res => res.json()).then(console.log).catch(console.error);
+      }, err => {
+        alert("Failed to fetch location.");
+        console.error(err);
       });
     }
 
@@ -92,58 +90,40 @@
       fetch('/api/live-distance')
         .then(res => res.json())
         .then(data => {
-          const distanceText = data.distance !== undefined
+          document.getElementById('distance-value').textContent = data.distance !== undefined
             ? `${data.distance} km apart`
             : "Location not available";
-          document.getElementById('distance-value').textContent = distanceText;
-        })
-        .catch(err => {
-          console.error("Failed to fetch live distance:", err);
+        }).catch(err => {
           document.getElementById('distance-value').textContent = "Error";
+          console.error(err);
         });
     }
 
-    // Auto-run both functions on load
-    window.onload = () => {
-      updateLocation();
-      updateLiveDistance();
-      setInterval(updateLiveDistance, 300000);
-    };
-  </script>
-  <script>
     let map;
-  
     function initMap(lat, lon) {
-      map = L.map('map').setView([lat, lon], 6);  // Center map
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18
-      }).addTo(map);
+      map = L.map('map').setView([lat, lon], 6);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
     }
-  
+
     function updateMap(userLoc, partnerLoc) {
-      map.eachLayer((layer) => {
-        if (layer instanceof L.Marker) map.removeLayer(layer);
-      });
-  
+      map.eachLayer(layer => { if (layer instanceof L.Marker) map.removeLayer(layer); });
       L.marker(userLoc).addTo(map).bindPopup("You").openPopup();
       L.marker(partnerLoc).addTo(map).bindPopup("Partner");
     }
-  
+
     function fetchLocationsAndUpdateMap() {
       fetch('/api/live-distance')
         .then(res => res.json())
         .then(data => {
           if (data.user_location && data.partner_location) {
-            const userLoc = [data.user_location.latitude, data.user_location.longitude];
-            const partnerLoc = [data.partner_location.latitude, data.partner_location.longitude];
-            if (!map) initMap(userLoc[0], userLoc[1]);
-            updateMap(userLoc, partnerLoc);
+            const user = [data.user_location.latitude, data.user_location.longitude];
+            const partner = [data.partner_location.latitude, data.partner_location.longitude];
+            if (!map) initMap(user[0], user[1]);
+            updateMap(user, partner);
           }
-        })
-        .catch(err => console.error("Failed to update map:", err));
+        }).catch(console.error);
     }
-  
-    // Call this once and then every 5 minutes
+
     window.onload = () => {
       updateLocation();
       updateLiveDistance();

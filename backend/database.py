@@ -22,7 +22,7 @@ engine = create_engine(
     DATABASE_URL,
     pool_size=10,       # default is 5
     max_overflow=20,    # allow 20 extra temporary connections
-    pool_timeout=30     # wait 30s before raising error
+    pool_timeout=30  # wait 30s before raising error
 )
 # Create session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
